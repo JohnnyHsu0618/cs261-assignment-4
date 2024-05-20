@@ -101,51 +101,52 @@ class AVL(BST):
 
     def add(self, value: object) -> None:
         
-        new_node = AVLNode(value)           # Create a new node for new data
-        if self._root is None:              # If it is an empty tree
+        new_node = AVLNode(value)           # Create a new node for the new data.
+        if self._root is None:              # If it's an empty tree.
             self._root = new_node           # Make the new node the root of the tree.  
             return
         
         current = self._root
         parent = None
-        while current:                      # Find insertion point
+        while current:                      # Find Insertion Position
             parent = current
-            if value < current.value:
+            if value == current.value:
+                return
+            elif value < current.value:
                 current = current.left
             else:
                 current = current.right
 
-        new_node.parent = parent            # Set the parent field of the new node
-        if value < parent.value:            # Install a new node
+        new_node.parent = parent            # Set the parent field of the new node.
+        if value < parent.value:            # Add a new node.
             parent.left = new_node
         else:
             parent.right = new_node
 
-        self._rebalance(new_node)           # Set up the height field of the new node and check for balance.
-
+        self._rebalance(new_node)           # Add a height field for the new node and check its balance.
 
     def remove(self, value: object) -> bool:
         
         node = self._root
         parent = None
-        while node and node.value != value:    # Find the node to be deleted
+        while node and node.value != value:    # Searching for the node to remove.
             parent = node
             if value < node.value:
                 node = node.left
             else:
                 node = node.right
         
-        if node is None:    # No node to delete was found.
+        if node is None:    # Node to remove not found.
             return False
 
-        if node.left is None and node.right is None:                # To delete a node that has no subtree.
+        if node.left is None and node.right is None:                # If the node to be removed has no subtree.
             check_bf = self._remove_no_subtrees(parent,node)
-        elif node.left is None or node.right is None:               # To delete a node with only one subtree.
+        elif node.left is None or node.right is None:               # If the node to be removed has only one subtree.
             check_bf = self._remove_one_subtree(parent, node)
-        else:                                                       # To delete a node that has two subtrees.
+        else:                                                       # If the node to be removed has two subtrees.
             check_bf = self._remove_two_subtrees(parent, node)
         
-        self._rebalance(check_bf)   # Check balance
+        self._rebalance(check_bf)   # check balance
         return True
 
     # Experiment and see if you can use the optional                         #
@@ -159,8 +160,8 @@ class AVL(BST):
     def _remove_no_subtrees(self, remove_parent: AVLNode, remove_node: AVLNode) -> AVLNode:
         
         # remove node that has no subtrees (no left or right nodes)
-        if remove_parent is None:                   # If the node to be deleted is the root and the root has no subtrees.
-            self._root = None                       # After deleting, it becomes an empty tree.
+        if remove_parent is None:                   # If the thing to be removed is the tree root, and the tree root has no subtrees.
+            self._root = None                       # After removing, it becomes an empty tree.
         elif remove_parent.left == remove_node:
             remove_parent.left = None
         else:
@@ -171,15 +172,15 @@ class AVL(BST):
     def _remove_one_subtree(self, remove_parent: AVLNode, remove_node: AVLNode) -> AVLNode:
         
         # remove node that has a left or right subtree (only)
-        if remove_node.left:                # The node to be deleted has a unique subtree, and that subtree is the left subtree.
+        if remove_node.left:                # Node to be removed has a unique left subtree.
             child = remove_node.left
-        else:                               # The node to be deleted has a unique subtree, which is the right subtree.
+        else:                               # Node to be removed with a unique right subtree.
             child = remove_node.right
 
         child.parent = remove_parent
 
-        if remove_parent is None:           # If what needs to be removed is the tree root.
-            self._root = child              # Make the child the new root of the tree.
+        if remove_parent is None:           # If what needs to be removed is the tree root
+            self._root = child              # the child be the new root
         elif remove_parent.left == remove_node:
             remove_parent.left = child
         else:
@@ -196,16 +197,16 @@ class AVL(BST):
             successor_parent = successor
             successor = successor.left
 
-        remove_node.value = successor.value     
+        remove_node.value = successor.value     # Replace with minimum value the Vvlue of the node to be removed
+
         if successor_parent.left == successor:
             if successor.right:
-                successor.right.parent = successor_parent   # f the right subtree of the minimum value node is not empty, then the parent field of it should be set.
+                successor.right.parent = successor_parent   # If the right subtree of the minimum node is not empty, then set its parent field.
             successor_parent.left = successor.right
         else:
             if successor.right:
-                successor.right.parent = successor_parent   # If the right subtree of the minimum value node is not empty, then its parent field needs to be set.
+                successor.right.parent = successor_parent   # f the right subtree of the minimum value node is not empty, then its parent field needs to be set
             successor_parent.right = successor.right        # If the minimum value node is the root of the right subtree.
-
         return successor_parent
 
     # It's highly recommended to implement                          #
@@ -215,18 +216,17 @@ class AVL(BST):
     # Change these methods in any way you'd like.                   #
 
     def _balance_factor(self, node: AVLNode) -> int:
-        
+       
         return self._get_height(node.left) - self._get_height(node.right)   # Calculate the balance factor of a node.
-
 
     def _get_height(self, node: AVLNode) -> int:
         
         if node is None:        # If the node is empty, the height is -1; if the node is a leaf, the height is 0.
             return -1
-        return node.height      # Get the height of a node.
+        return node.height      # Get the height of a node
 
 
-    def _rotate_left(self, node: AVLNode) -> AVLNode:      
+    def _rotate_left(self, node: AVLNode) -> AVLNode:      # left rotation
         
         new_root = node.right                   # Let new_root be the new root after left rotation.
         node.right = new_root.left              # Clear the left link of new_root.
@@ -236,8 +236,8 @@ class AVL(BST):
             new_root.left.parent = node         
         new_root.parent = node.parent
 
-        # put down new roots
-        if node.parent is None:                 # If node is the root of the tree
+        # Put down new roots
+        if node.parent is None:                 # If node is the root of the tree.
             self._root = new_root               # new_root becomes the new root of the entire tree.
         elif node == node.parent.left:          
             node.parent.left = new_root
@@ -245,17 +245,17 @@ class AVL(BST):
             node.parent.right = new_root
 
         new_root.left = node                    # Attach the node to the left of the new root.
-        node.parent = new_root                  # Set parent
+        node.parent = new_root                  # set parent
 
-        self._update_height(node)               # Update height
+        self._update_height(node)               # update height
         self._update_height(new_root)           
-        return new_root                         # new_root adjusted downwards, completed.
+        return new_root                         # new_root is adjusted downwards, completed.
 
 
-    def _rotate_right(self, node: AVLNode) -> AVLNode:      
+    def _rotate_right(self, node: AVLNode) -> AVLNode:      # right rotation
         
-        new_root = node.left                    # Let new_root be the new root after right rotation.
-        node.left = new_root.right              # Empty the right link of new_root
+        new_root = node.left                    # Let new_root be the new root after right rotation
+        node.left = new_root.right              # Clear the right link of new_root
 
         # set parent
         if new_root.right:
@@ -263,19 +263,19 @@ class AVL(BST):
         new_root.parent = node.parent
 
         # put down new roots
-        if node.parent is None:                 # If node is the root of the tree
+        if node.parent is None:                 # If the node is the root of the tree.
             self._root = new_root               # new_root becomes the new root of the entire tree.
         elif node == node.parent.right:
             node.parent.right = new_root
         else:
             node.parent.left = new_root
 
-        new_root.right = node               # Attach the node to the right side of the new root.
+        new_root.right = node               # Attach the node to the right of the new root.
         node.parent = new_root              # set parent
 
-        self._update_height(node)           # update height
+        self._update_height(node)           # Update height
         self._update_height(new_root)
-        return new_root                     # The new_root has been adjusted downward, completed.
+        return new_root                     # The new_root has been adjusted downwards
 
 
     def _update_height(self, node: AVLNode) -> None:
@@ -285,20 +285,20 @@ class AVL(BST):
 
     def _rebalance(self, node: AVLNode) -> None:
         
-        while node:                                             # Adjust to the top
-            self._update_height(node)                           # update height
+        while node:                                             # Adjust upwards to the top
+            self._update_height(node)                           # updat height 
             balance = self._balance_factor(node)                # check balance
             
-            if balance > 1:                                     # The left tree is taller, so we need to perform a right rotation (LL type or LR type).
+            if balance > 1:                                     # The left tree is taller, so we need to perform a right rotation (LL type or LR type)
                 if self._balance_factor(node.left) < 0:         # LR type
                     self._rotate_left(node.left)                # First rotate left, then rotate right.
                 node = self._rotate_right(node)                 
-            elif balance < -1:                                  # The right subtree is taller, requiring a left rotation (RR type or RL type).
+            elif balance < -1:                                  # Right tree is higher, perform a left rotation (RR type or RL type).
                 if self._balance_factor(node.right) > 0:        # RL type
                     self._rotate_right(node.right)              # First rotate right, then rotate left.
                 node = self._rotate_left(node)
             
-            node = node.parent                                  # Continue to adjust upwards.
+            node = node.parent                                  # Continue to adjust upwards
 
 # ------------------- BASIC TESTING -----------------------------------------
 
@@ -482,3 +482,4 @@ if __name__ == '__main__':
     print("Tree before make_empty():", tree)
     tree.make_empty()
     print("Tree after make_empty(): ", tree)
+
