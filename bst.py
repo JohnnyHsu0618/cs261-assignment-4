@@ -177,22 +177,22 @@ class BST:
         current = self._root
 
         while current is not None:
-            if value < current.value:       # If the value to be deleted is less than the value of the current node, move to the left.
+            if value < current.value:       # If the value to be removed is less than the value of the current node, move to the left.
                 parent = current
                 current = current.left
-            elif value > current.value:     # If the value to be deleted is greater than the value of the current node, move to the right.
+            elif value > current.value:     # If the value to be removed is greater than the value of the current node, move to the right.
                 parent = current
                 current = current.right
             else:                           # If the value to be added equals the current node's value, perform deletion.
-                # Node to be deleted found
-                if current.left is None and current.right is None:    # To delete a node that has no subtrees.
+                # Node to be removed found
+                if current.left is None and current.right is None:    # To remove a node that has no subtrees.
                     self._remove_no_subtrees(parent, current)
-                elif current.left is None or current.right is None:   # If the node to be deleted has only one subtree.
+                elif current.left is None or current.right is None:   # If the node to be removed has only one subtree.
                     self._remove_one_subtree(parent, current)
-                else:                                                 # If the node to be deleted has two subtrees.
+                else:                                                 # If the node to be removed has two subtrees.
                     self._remove_two_subtrees(parent, current)
                 return True                                           # The deletion was successfully executed, returning True.
-        return False    # In the tree, the point to be deleted is not found, deletion operation fails, returning False.
+        return False    # In the tree, the point to be removed is not found, deletion operation fails, returning False.
 
     # Consider implementing methods that handle different removal scenarios; #
     # you may find that you're able to use some of them in the AVL.          #
@@ -203,8 +203,8 @@ class BST:
     def _remove_no_subtrees(self, remove_parent: BSTNode, remove_node: BSTNode) -> None:
         
         # remove node that has no subtrees (no left or right nodes)
-        if remove_parent is None:                   # If what is to be deleted is the root of the tree, and the root has no subtree.
-            self._root = None                       # After deletion, it becomes an empty tree.
+        if remove_parent is None:                   # If what is to be removed is the root of the tree, and the root has no subtree.
+            self._root = None                       # After remove, it becomes an empty tree.
         elif remove_parent.left == remove_node:
             remove_parent.left = None
         else:
@@ -212,13 +212,11 @@ class BST:
 
 
     def _remove_one_subtree(self, remove_parent: BSTNode, remove_node: BSTNode) -> None:
-        """
-        TODO: Write your implementation
-        """
+        
         # remove node that has a left or right subtree (only)
-        if remove_node.left:                # The node to be deleted has a child, which is a left subtree.
+        if remove_node.left:                # The node to be removed has a child, which is a left subtree.
             child = remove_node.left
-        else:                               # The node to be deleted has a unique child, which is the right subtree.
+        else:                               # The node to be removed has a unique child, which is the right subtree.
             child = remove_node.right
 
         if remove_parent is None:           # If what needs to be removed is the root.
@@ -230,9 +228,7 @@ class BST:
 
 
     def _remove_two_subtrees(self, remove_parent: BSTNode, remove_node: BSTNode) -> None:
-        """
-        TODO: Write your implementation
-        """
+        
         # remove node that has two subtrees
         # need to find inorder successor and its parent (make a method!)
         successor_parent = remove_node
@@ -243,10 +239,10 @@ class BST:
             successor_parent = successor
             successor = successor.left
 
-        # Replace the value of the node to be deleted with the minimum value found.
+        # Replace the value of the node to be removed with the minimum value found.
         remove_node.value = successor.value
 
-        # Delete the node with the smallest value in the right subtree.
+        # Remove the node with the smallest value in the right subtree.
         if successor_parent.left == successor:
             successor_parent.left = successor.right
         else:
@@ -254,9 +250,7 @@ class BST:
 
 
     def contains(self, value: object) -> bool:
-        """
-        TODO: Write your implementation
-        """
+        
         current = self._root
         while current:
             if value == current.value:      # Found the value I was looking for.
@@ -269,9 +263,7 @@ class BST:
 
 
     def inorder_traversal(self) -> Queue:
-        """
-        TODO: Write your implementation
-        """
+        
         q = Queue()
         self._inorder_helper(self._root, q)
         return q
@@ -286,9 +278,7 @@ class BST:
 
 
     def find_min(self) -> object:
-        """
-        TODO: Write your implementation
-        """
+        
         if self._root is None:              # If the tree is empty, directly return None.
             return None
         current = self._root
@@ -298,9 +288,7 @@ class BST:
 
 
     def find_max(self) -> object:
-        """
-        TODO: Write your implementation
-        """
+        
         if self._root is None:             # If the tree is empty, directly return None.
             return None
         current = self._root
@@ -310,16 +298,12 @@ class BST:
 
 
     def is_empty(self) -> bool:
-        """
-        TODO: Write your implementation
-        """
+        
         return self._root is None
 
 
     def make_empty(self) -> None:
-        """
-        TODO: Write your implementation
-        """
+        
         self._root = None
 
 
